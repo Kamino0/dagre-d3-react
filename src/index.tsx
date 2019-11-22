@@ -13,6 +13,7 @@ interface GraphProps {
 	animate?: number
 	className?: string
 	shape?: shapes
+	curve?: any
 	onNodeClick: Function
 	onNodeRightClick: Function
 	onNodeDoubleClick: Function
@@ -71,6 +72,7 @@ class DagreGraph extends Component<GraphProps> {
 			rankdir,
 			animate,
 			shape,
+			curve,
 			onNodeClick,
 			onNodeRightClick,
 			onNodeDoubleClick,
@@ -88,7 +90,7 @@ class DagreGraph extends Component<GraphProps> {
 			g.nodes().forEach(v => (g.node(v).shape = shape))
 		}
 
-		links.forEach(link => g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '' }))
+		links.forEach(link => g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '' , curve: d3.curveStepBefore}))
 
 		let render = new dagreD3.render()
 		let svg: any = d3.select(this.svg.current)
