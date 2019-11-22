@@ -90,7 +90,7 @@ class DagreGraph extends Component<GraphProps> {
 			g.nodes().forEach(v => (g.node(v).shape = shape))
 		}
 
-		links.forEach(link => g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '' , curve: d3.curveMonotoneX}))
+		links.forEach(link => g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '' , curve: curve}))
 
 		let render = new dagreD3.render()
 		let svg: any = d3.select(this.svg.current)

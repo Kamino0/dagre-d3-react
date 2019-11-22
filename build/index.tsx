@@ -33708,10 +33708,6 @@ ReflectContext$1.prototype = {
   bezierCurveTo: function(x1, y1, x2, y2, x, y) { this._context.bezierCurveTo(y1, x1, y2, x2, y, x); }
 };
 
-function monotoneX$1(context) {
-  return new MonotoneX$1(context);
-}
-
 function constant$g(x) {
   return function() {
     return x;
@@ -34203,7 +34199,7 @@ var DagreGraph = /** @class */ (function (_super) {
             if (shape) {
                 g.nodes().forEach(function (v) { return (g.node(v).shape = shape); });
             }
-            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '', curve: monotoneX$1 }); });
+            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '', curve: curve }); });
             var render = new dagreD3.render();
             var svg = select$1(_this.svg.current);
             var inner = select$1(_this.innerG.current);
