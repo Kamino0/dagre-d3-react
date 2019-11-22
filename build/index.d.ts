@@ -10,6 +10,7 @@ interface GraphProps {
     animate?: number;
     className?: string;
     shape?: shapes;
+    curve?: any;
     onNodeClick: Function;
     onNodeRightClick: Function;
     onNodeDoubleClick: Function;

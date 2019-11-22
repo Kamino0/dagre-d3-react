@@ -33701,6 +33701,52 @@ ReflectContext$1.prototype = {
   bezierCurveTo: function(x1, y1, x2, y2, x, y) { this._context.bezierCurveTo(y1, x1, y2, x2, y, x); }
 };
 
+function Step$1(context, t) {
+  this._context = context;
+  this._t = t;
+}
+
+Step$1.prototype = {
+  areaStart: function() {
+    this._line = 0;
+  },
+  areaEnd: function() {
+    this._line = NaN;
+  },
+  lineStart: function() {
+    this._x = this._y = NaN;
+    this._point = 0;
+  },
+  lineEnd: function() {
+    if (0 < this._t && this._t < 1 && this._point === 2) this._context.lineTo(this._x, this._y);
+    if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
+    if (this._line >= 0) this._t = 1 - this._t, this._line = 1 - this._line;
+  },
+  point: function(x, y) {
+    x = +x, y = +y;
+    switch (this._point) {
+      case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
+      case 1: this._point = 2; // proceed
+      default: {
+        if (this._t <= 0) {
+          this._context.lineTo(this._x, y);
+          this._context.lineTo(x, y);
+        } else {
+          var x1 = this._x * (1 - this._t) + x * this._t;
+          this._context.lineTo(x1, this._y);
+          this._context.lineTo(x1, y);
+        }
+        break;
+      }
+    }
+    this._x = x, this._y = y;
+  }
+};
+
+function stepBefore$1(context) {
+  return new Step$1(context, 0);
+}
+
 function constant$g(x) {
   return function() {
     return x;
@@ -34184,7 +34230,7 @@ var DagreGraph = /** @class */ (function (_super) {
         _this.svg = createRef();
         _this.innerG = createRef();
         _this._drawChart = function () {
-            var _a = _this.props, nodes = _a.nodes, links = _a.links, zoomable = _a.zoomable, fitBoundaries = _a.fitBoundaries, rankdir = _a.rankdir, animate = _a.animate, shape = _a.shape, onNodeClick = _a.onNodeClick, onNodeRightClick = _a.onNodeRightClick, onNodeDoubleClick = _a.onNodeDoubleClick, onRelationshipClick = _a.onRelationshipClick, onRelationshipRightClick = _a.onRelationshipRightClick, onRelationshipDoubleClick = _a.onRelationshipDoubleClick;
+            var _a = _this.props, nodes = _a.nodes, links = _a.links, zoomable = _a.zoomable, fitBoundaries = _a.fitBoundaries, rankdir = _a.rankdir, animate = _a.animate, shape = _a.shape, curve = _a.curve, onNodeClick = _a.onNodeClick, onNodeRightClick = _a.onNodeRightClick, onNodeDoubleClick = _a.onNodeDoubleClick, onRelationshipClick = _a.onRelationshipClick, onRelationshipRightClick = _a.onRelationshipRightClick, onRelationshipDoubleClick = _a.onRelationshipDoubleClick;
             var g = new dagreD3.graphlib.Graph().setGraph({ rankdir: rankdir });
             nodes.forEach(function (node) {
                 return g.setNode(node.id, { label: node.label, class: node.class || '', labelType: node.labelType || 'string' });
@@ -34192,7 +34238,7 @@ var DagreGraph = /** @class */ (function (_super) {
             if (shape) {
                 g.nodes().forEach(function (v) { return (g.node(v).shape = shape); });
             }
-            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '' }); });
+            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '', curve: stepBefore$1 }); });
             var render = new dagreD3.render();
             var svg = select$1(_this.svg.current);
             var inner = select$1(_this.innerG.current);
