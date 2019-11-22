@@ -33701,50 +33701,8 @@ ReflectContext$1.prototype = {
   bezierCurveTo: function(x1, y1, x2, y2, x, y) { this._context.bezierCurveTo(y1, x1, y2, x2, y, x); }
 };
 
-function Step$1(context, t) {
-  this._context = context;
-  this._t = t;
-}
-
-Step$1.prototype = {
-  areaStart: function() {
-    this._line = 0;
-  },
-  areaEnd: function() {
-    this._line = NaN;
-  },
-  lineStart: function() {
-    this._x = this._y = NaN;
-    this._point = 0;
-  },
-  lineEnd: function() {
-    if (0 < this._t && this._t < 1 && this._point === 2) this._context.lineTo(this._x, this._y);
-    if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
-    if (this._line >= 0) this._t = 1 - this._t, this._line = 1 - this._line;
-  },
-  point: function(x, y) {
-    x = +x, y = +y;
-    switch (this._point) {
-      case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
-      case 1: this._point = 2; // proceed
-      default: {
-        if (this._t <= 0) {
-          this._context.lineTo(this._x, y);
-          this._context.lineTo(x, y);
-        } else {
-          var x1 = this._x * (1 - this._t) + x * this._t;
-          this._context.lineTo(x1, this._y);
-          this._context.lineTo(x1, y);
-        }
-        break;
-      }
-    }
-    this._x = x, this._y = y;
-  }
-};
-
-function step$1(context) {
-  return new Step$1(context, 0.5);
+function monotoneX$1(context) {
+  return new MonotoneX$1(context);
 }
 
 function constant$g(x) {
@@ -34238,7 +34196,7 @@ var DagreGraph = /** @class */ (function (_super) {
             if (shape) {
                 g.nodes().forEach(function (v) { return (g.node(v).shape = shape); });
             }
-            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '', curve: step$1 }); });
+            links.forEach(function (link) { return g.setEdge(link.source, link.target, { label: link.label || '', class: link.class || '', curve: monotoneX$1 }); });
             var render = new dagreD3.render();
             var svg = select$1(_this.svg.current);
             var inner = select$1(_this.innerG.current);
