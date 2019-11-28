@@ -34184,8 +34184,8 @@ var DagreGraph = /** @class */ (function (_super) {
         _this.svg = createRef();
         _this.innerG = createRef();
         _this._drawChart = function () {
-            var _a = _this.props, nodes = _a.nodes, links = _a.links, zoomable = _a.zoomable, fitBoundaries = _a.fitBoundaries, rankdir = _a.rankdir, animate = _a.animate, shape = _a.shape, curve = _a.curve, onNodeClick = _a.onNodeClick, onNodeRightClick = _a.onNodeRightClick, onNodeDoubleClick = _a.onNodeDoubleClick, onRelationshipClick = _a.onRelationshipClick, onRelationshipRightClick = _a.onRelationshipRightClick, onRelationshipDoubleClick = _a.onRelationshipDoubleClick;
-            var g = new dagreD3.graphlib.Graph().setGraph({ rankdir: rankdir });
+            var _a = _this.props, nodes = _a.nodes, links = _a.links, zoomable = _a.zoomable, fitBoundaries = _a.fitBoundaries, rankdir = _a.rankdir, animate = _a.animate, shape = _a.shape, curve = _a.curve, onNodeClick = _a.onNodeClick, onNodeRightClick = _a.onNodeRightClick, onNodeDoubleClick = _a.onNodeDoubleClick, onRelationshipClick = _a.onRelationshipClick, onRelationshipRightClick = _a.onRelationshipRightClick, onRelationshipDoubleClick = _a.onRelationshipDoubleClick, graphParams = _a.graphParams;
+            var g = new dagreD3.graphlib.Graph().setGraph(graphParams);
             nodes.forEach(function (node) {
                 return g.setNode(node.id, { label: node.label, class: node.class || '', labelType: node.labelType || 'string' });
             });

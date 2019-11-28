@@ -17,6 +17,7 @@ interface GraphProps {
     onRelationshipClick: Function;
     onRelationshipDoubleClick: Function;
     onRelationshipRightClick: Function;
+    graphParams: object;
 }
 declare type rankdir = 'TB' | 'BT' | 'LR' | 'RL';
 declare type shapes = 'rect' | 'circle' | 'ellipse';

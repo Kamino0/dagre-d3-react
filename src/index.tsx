@@ -19,7 +19,8 @@ interface GraphProps {
 	onNodeDoubleClick: Function
 	onRelationshipClick: Function
 	onRelationshipDoubleClick: Function
-	onRelationshipRightClick: Function
+    onRelationshipRightClick: Function
+    graphParams: object
 }
 type rankdir = 'TB' | 'BT' | 'LR' | 'RL'
 type shapes = 'rect' | 'circle' | 'ellipse'
@@ -78,9 +79,10 @@ class DagreGraph extends Component<GraphProps> {
 			onNodeDoubleClick,
 			onRelationshipClick,
 			onRelationshipRightClick,
-			onRelationshipDoubleClick
+            onRelationshipDoubleClick,
+            graphParams,
 		} = this.props
-		let g = new dagreD3.graphlib.Graph().setGraph({ rankdir })
+		let g = new dagreD3.graphlib.Graph().setGraph(graphParams)
 
 		nodes.forEach(node =>
 			g.setNode(node.id, { label: node.label, class: node.class || '', labelType: node.labelType || 'string' })
